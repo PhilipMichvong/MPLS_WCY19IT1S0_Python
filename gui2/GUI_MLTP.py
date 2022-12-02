@@ -1,12 +1,16 @@
 import tkinter as tk
 from tkinter import *
-
-
 from PIL import ImageTk, Image
+
+
 root = tk.Tk()
+
 global Console_Text
+
 count_computer = 0
 count_router = 0
+
+
 def open_setings_r1(*args):
     set = tk.Tk()
     set.title(f"ustawienia router 1")
@@ -24,6 +28,8 @@ def open_setings_r1(*args):
     ip.grid(row=4, column=1, padx=3)
     input_ip = tk.Entry(set)
     input_ip.grid(row=5, column=1, padx=3)
+    
+    
 def Router_Add():
     global img
     global img2
@@ -46,6 +52,8 @@ def Router_Add():
     label4_router = Label(image=img4)
     label4_router.place(x=760, y=300)
     consoleOutputLabel.config(text=f">Dodano routery, kliknij na nie aby skonfigurowac")
+    
+    
 def Computer_Add():
     global img_computer_1
     global img_computer_2
@@ -90,7 +98,6 @@ def WindwowSettings(resolution: str, title: str):
     root.resizable(False, False)
 
 
-
 def ToolBox():
     consoleLabel = tk.Label(root, text="Konsola symulacji", font=('Arial', 15), fg="#32CD32")
     toolBoxLabel = tk.Label(root, text="ToolBox", font=('Arial', 15))
@@ -115,6 +122,7 @@ def ToolBox():
     MLTPlabel.place(x=1080, y=400)
     MLTPbutton.place(x=1120, y=450,width=100)
 
+
 def MiddlePart():
     text = "MLTP symulator"
     label = tk.Label(root, text=text, font=('Arial', 20))
@@ -136,7 +144,11 @@ def ConsoleOutputPart():
 
 
 WindwowSettings("1280x720", "apka")
+
 ToolBox()
+
 MiddlePart()
+
 ConsoleOutputPart()
+
 root.mainloop()
