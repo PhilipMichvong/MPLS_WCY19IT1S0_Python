@@ -52,6 +52,21 @@ class PC(Device):
     [Interfaces]: {self.interfaces}
     [Gateway]: {self.gateway}'''
     
+    def add_gateway(self, gateway_address : str):
+        if len(self.interfaces) > 0:
+            for interface in self.interfaces:
+                net_addr = Net.compute_network_address(interface.address, interface.mask)[0]
+                netgateway_addr = Net.compute_network_address(gateway_address, interface.mask)[0]
+
+                if net_addr == netgateway_addr:
+                    self.gateway = gateway_address
+                    return
+                
+            raise ValueError(f'{gateway_address} : Gateway address is not valid!')
+        
+        else:
+            raise ValueError('This PC has no interfaces!')
+
 
 # ********** class <Router> **********
 class Router(Device):
