@@ -31,6 +31,15 @@ Tworzenie wirtualnego środowiska
 
     python -m venv ./.venv
 
+Tworzenie wirtualnego środowiska
+
+Aktywowanie wirtualengo środowsika ( w Windows) 
+    ./.venv/Scripts/activate
+ 
+Aktywowanie wirtualengo środowsika ( w Linux) 
+    source .\.venv\lib\activate 
+  
+
 Zainstalowanie wykorzystywanych bibliotek
 
     python -m pip install -r ./requirements
