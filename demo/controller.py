@@ -2,26 +2,28 @@ import network.packet as netpac
 import network.devices as netdev
 import network.interface as netint
 
-class Controller:
-    PCs = []
-    Routers = []
-    
+class Controller:    
     @staticmethod
     def add_router(name = None):
         router = netdev.Router(name)
-        Controller.Routers.append(router)
+        return router
         
     @staticmethod
     def add_pc(name = None):
         pc = netdev.PC(name)
-        Controller.PCs.append(pc)
+        return pc
+        
+    @staticmethod
+    def add_interface(device : netdev.Device, intf_name : str, intf_ip_addr : str, intf_mask : str):
+        device._add_interface(intf_name, intf_ip_addr, intf_mask)
+        return device
     
     @staticmethod
-    def show_routers():
-        for router in Controller.Routers:
-            print(router)
-            
+    def add_gateway(pc : netdev.PC, ip_addr : str):
+        pc.add_gateway(ip_addr)
+        return pc
+    
+    
     @staticmethod
-    def show_pcs():
-        for pc in Controller.PCs:
-            print(pc)
+    def start_simulation():
+        pass
