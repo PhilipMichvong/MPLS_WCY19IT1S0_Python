@@ -1,3 +1,6 @@
+import backend.network.devices as netdev
+import backend.network.packet as netpac
+
 MASK = {
     0 : '0.0.0.0',
     1 : '128.0.0.0',
@@ -153,3 +156,21 @@ class Net:
         net = Net(net_addr, mask, broadcast)
         net.add_device(address)
         return net
+
+
+    def deliver_packet(self, packet, next_hop = None):
+        print(f'\tDELIVERING in {self.address} ...')
+        
+        if next_hop is None:
+            # to PC
+            device = netdev.Device.get_device_by_address(packet.addr_to)
+            
+        else:
+            # to another router
+            device = netdev.Device.get_device_by_address(next_hop)
+            
+        if device is None:
+            raise ValueError(f'Cannot find device in net {self.address}')
+        
+        else:
+            device._receive_packet(packet)

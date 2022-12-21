@@ -1,7 +1,8 @@
 from enum import Enum
-from network.net import MASK
+from backend.network.net import MASK
 
 class PACKET_TYPE(Enum):
+    RIP = 0
     MPLS = 1
     
 

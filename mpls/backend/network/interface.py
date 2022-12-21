@@ -1,4 +1,4 @@
-from network.net import Net
+import backend.network.net as netnet
 
 # ********** class <Interface> **********
 class Interface:
@@ -8,7 +8,7 @@ class Interface:
         self.mask = mask
         
         if device:
-            self.network = Net.assign_network(address, mask, device)
+            self.network = netnet.Net.assign_network(address, mask, device)
     
     def __repr__(self) -> str:
         return f'{self.name} : {self.address}'
