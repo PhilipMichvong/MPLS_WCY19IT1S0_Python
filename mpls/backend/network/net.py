@@ -40,7 +40,7 @@ MASK = {
 
 # ********** class <Net> **********
 class Net:
-    networks = []
+    NETS = []
     
     def __init__(self, address : str, mask : str, broadcast : str):
         self.address = address
@@ -49,18 +49,19 @@ class Net:
         
         self.devices_addresses = []
         
-        Net.networks.append(self)
+        Net.NETS.append(self)
         
     def __repr__(self):
         return f'Network [{self.address} : {self.mask} : {self.broadcast}]'
     
     
-    # Add device IP address to network's devices_list
+    # DEVICES
+    # -- Add device IP address to network's devices_list
     def add_device(self, dev_addr : str):
         if not self.devices_addresses.__contains__(dev_addr):
             self.devices_addresses.append(dev_addr)
     
-    # Remove device IP address from network's devices_list
+    # -- Remove device IP address from network's devices_list
     def remove_device(self, dev_addr : str):
         if self.devices_addresses.__contains__(dev_addr):
             self.devices_addresses.remove(dev_addr)
@@ -68,23 +69,69 @@ class Net:
         if len(self.devices_addresses) == 0:
             Net.remove_network(self)
     
-    # Check if network's devices_list contains specified IP address
+    # -- Check if network's devices_list contains specified IP address
     def is_host_available(self, address : str):
         if address in self.devices_addresses:
             return False
         return True
     
-    # Print all networks
+    
+    # DELIVERING PACKETS
+    # -- Deliver packet via network to specified device
+    def deliver_packet(self, packet, next_hop = None):
+        print(f'NET : {self.address} : Delivering packet :\n\t{packet.type}')
+        # Get next device to deliver the packet
+        #   -- to further device
+        if next_hop is None:
+            # Check if there is device with specified address
+            if not self.is_host_available(packet.addr_to):
+                device = netdev.Device.get_device_by_address(packet.addr_to)
+                device.receive_packet(packet)
+            else:
+                raise ValueError(f'Cannot find device [{packet.addr_to}] in net {self.address}')
+        
+        #   -- to end device
+        else:
+            # Check if there is device with specified address 
+            if not self.is_host_available(next_hop):
+                device = netdev.Device.get_device_by_address(next_hop)
+                device.receive_packet(packet)
+            else:
+                raise ValueError(f'Cannot find device [{next_hop}] in net {self.address}')
+            
+    # -- Deliver packet via network to all devices in network except `router_addr`
+    def deliver_packet_broadcast(self, packet, router_addr : str):
+        print(f'NET : {self.address} : Delivering packet BROADCAST :\n\tTO: {self.devices_addresses}: \n\t{packet.type}')
+        
+        for address in self.devices_addresses:
+            if address != router_addr:
+                packet.addr_to = address
+                self.deliver_packet(packet)
+    
+    
+    # NETWORK
+    # -- Print all networks
     @staticmethod
     def show_networks():
         print('Networks:')
-        if len(Net.networks) > 0:
-            for i in range(len(Net.networks)):
-                print(f'[{i+1}]. {Net.networks[i]}')
+        if len(Net.NETS) > 0:
+            for i in range(len(Net.NETS)):
+                print(f'[{i+1}]. {Net.NETS[i]}')
             return
         print('-')
     
-    # Calculate network and broadcast addresses
+    # -- Remove <Net>'net' from networks_list
+    @staticmethod
+    def remove_network(net):
+        if Net.NETS.__contains__(net):
+            Net.NETS.remove(net)
+    
+    # -- Remove all nets
+    @staticmethod
+    def clear_networks():
+        Net.NETS = []
+        
+    # -- Calculate network and broadcast addresses
     @staticmethod
     def compute_network_address(addr : str, mask : str):
         addr_octets = addr.split('.')
@@ -116,15 +163,9 @@ class Net:
         
         return net_addr, broadcast
     
-    # Remove <Net>'net' from networks_list
+    # -- Get (or if not existed - create new) network to specified IP address
     @staticmethod
-    def remove_network(net):
-        if Net.networks.__contains__(net):
-            Net.networks.remove(net)
-    
-    # Get (or if not existed - create new) network to specified IP address
-    @staticmethod
-    def assign_network(address : str, mask : str, device):
+    def assign_network(address : str, mask : str):
         
         # Compute network and broadcast addresses
         net_addr, broadcast = Net.compute_network_address(address, mask)
@@ -133,19 +174,20 @@ class Net:
             raise ValueError(f'Invalid device IP address [{address}]!')
         
         # if there are no networks
-        if len(Net.networks) == 0:
+        if len(Net.NETS) == 0:
             net = Net(net_addr, mask, broadcast)
             net.add_device(address)
             return net
 
         # check existing networks
-        for network in Net.networks:
+        for network in Net.NETS:
             
             # if specified network already exists
             if network.address == net_addr:
                 
                 # if address is valid and available
                 if network.is_host_available(address):
+                    network.add_device(address)
                     return network
 
                 # if address is not valid or is unavailable
@@ -156,21 +198,3 @@ class Net:
         net = Net(net_addr, mask, broadcast)
         net.add_device(address)
         return net
-
-
-    def deliver_packet(self, packet, next_hop = None):
-        print(f'\tDELIVERING in {self.address} ...')
-        
-        if next_hop is None:
-            # to PC
-            device = netdev.Device.get_device_by_address(packet.addr_to)
-            
-        else:
-            # to another router
-            device = netdev.Device.get_device_by_address(next_hop)
-            
-        if device is None:
-            raise ValueError(f'Cannot find device in net {self.address}')
-        
-        else:
-            device._receive_packet(packet)

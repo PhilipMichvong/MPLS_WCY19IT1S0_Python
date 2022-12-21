@@ -20,21 +20,24 @@ class Device:
         return f'''[Name]: {self._name}
     [Interfaces]: {self.interfaces}'''
     
-    def _add_interface(self, int_name : str, int_address : str, int_mask : str):
+    # Config
+    def add_interface(self, int_name : str, int_address : str, int_mask : str):
         # Check if interface with specified name already exists
         for interface in self.interfaces:
             if int_name == interface.name:
                 raise KeyError(f'Interface {int_name} already exists on this device!')
             
         # Create instance of class <Interface>
-        obj = netint.Interface(int_name, int_address, int_mask, self)
+        obj = netint.Interface(int_name, int_address, int_mask)
         
         self.interfaces.append(obj)
 
-    def _receive_packet(self, packet):
-        print(f'{self._name} : Received packet :\n{packet}')
+    # Packets
+    def receive_packet(self, packet):
+        print(f'{self._name} : Received packet :\n\t{packet.type = }\n{packet.data = }')
         
-    
+    # Interface get
+    #   -- Name
     def _get_interface_by_name(self, intf_name : str):
         for interface in self.interfaces:
             if interface.name == intf_name:
@@ -42,20 +45,16 @@ class Device:
             
         return None
     
-    def _get_interface_by_gateway(self, gateway : str):
+    #   -- Address
+    def _get_interface_by_address(self, intf_address : str):
         for interface in self.interfaces:
-            mask = interface.mask
-            address = interface.address
-            
-            net_addr_1 = netnet.Net.compute_network_address(address, mask)[0]
-            net_addr_2 = netnet.Net.compute_network_address(gateway, mask)[0]
-            
-            if net_addr_1.__eq__(net_addr_2):
+            if interface.address == intf_address:
                 return interface
             
         return None
     
     
+    # Devices
     @staticmethod
     def get_device_by_address(address : str):
         for device in Device.DEVICES:
@@ -65,7 +64,10 @@ class Device:
         
         return None
                 
-        
+    @staticmethod
+    def clear_devices():
+        Device.DEVICES = []
+
 
 # ********** class <PC> **********
 class PC(Device):
@@ -81,6 +83,7 @@ class PC(Device):
     [Interfaces]: {self.interfaces}
     [Gateway]: {self.gateway}'''
     
+    # Config
     def add_gateway(self, gateway_address : str):
         if len(self.interfaces) > 0:
             for interface in self.interfaces:
@@ -96,9 +99,9 @@ class PC(Device):
         else:
             raise ValueError('This PC has no interfaces!')
 
-
+    # Packets
     def send_packet(self, packet):
-        print(f'{self._name} : Sending packet :\n{packet}')
+        print(f'{self._name} : Sending packet :\n\t{packet.type}')
         
         if self.gateway is None:
             raise AttributeError('Gateway is not specified!')
@@ -109,6 +112,20 @@ class PC(Device):
             raise ValueError(f'Device has no interface with address {self.gateway}')
 
         interface.network.deliver_packet(packet, next_hop=self.gateway)
+
+    # Interface get
+    def _get_interface_by_gateway(self, gateway : str):
+        for interface in self.interfaces:
+            mask = interface.mask
+            address = interface.address
+            
+            net_addr_1 = netnet.Net.compute_network_address(address, mask)[0]
+            net_addr_2 = netnet.Net.compute_network_address(gateway, mask)[0]
+            
+            if net_addr_1.__eq__(net_addr_2):
+                return interface
+            
+        return None
 
 # ********** class <Router> **********
 class Router(Device):
@@ -129,41 +146,52 @@ class Router(Device):
     [Interfaces]: {self.interfaces} 
     [Route Table]: {self.route_table}'''
 
-    def _add_interface(self, int_name : str, int_address : str, int_mask : str):
+    # Config
+    def add_interface(self, int_name : str, int_address : str, int_mask : str):
         # Check if interface with specified name already exists
         for interface in self.interfaces:
             if int_name == interface.name:
                 raise KeyError(f'Interface {int_name} already exists on this device!')
             
         # Create instance of class <Interface>
-        interface = netint.Interface(int_name, int_address, int_mask, self)
+        interface = netint.Interface(int_name, int_address, int_mask)
         
         self.interfaces.append(interface)
         
         if not interface.network in self.route_table:
-            record = {"state" : 'C', "address": interface.network.address, "next_hop" : None, "interface" : interface.name}
+            record = {"protocol" : 'C', "address": interface.network.address, "next_hop" : None, "interface" : interface.name, 'metric' : 0}
             self.route_table.append(record)
     
-    
+    # Packets
     def send_packet(self, packet):
-        print(f'{self._name} : Sending packet :\n{packet}')
+        print(f'{self._name} : Sending packet :\n\t{packet.type}')
         
-        dest_net_addr = netnet.Net.compute_network_address(packet.addr_to, netnet.MASK[packet.mask_bits_to])[0]
+        dest_net_addr, dest_net_broadcast = netnet.Net.compute_network_address(packet.addr_to, netnet.MASK[packet.mask_bits_to])
         for record in self.route_table:            
             if record["address"] == dest_net_addr:
                 intf_name = record["interface"]
-                intf = self._get_interface_by_name(intf_name)
+                interface = self._get_interface_by_name(intf_name)
                 
-                next_hop = record["next_hop"]
-                
-                intf.network.deliver_packet(packet=packet, next_hop=next_hop)
+                if packet.addr_to == dest_net_broadcast:
+                    # Send to all in network
+                    interface.network.deliver_packet_broadcast(packet=packet, router_addr=interface.address)
+                    
+                else:
+                    # Send to specified device in network
+                    interface.network.deliver_packet(packet=packet, next_hop=record["next_hop"])
+                    
                 return
                 
         raise ValueError(f'{dest_net_addr} is not accesibble!')
     
-    
-    def _receive_packet(self, packet):
-        print(f'{self._name} : Received packet :\n{packet}')
+    def receive_packet(self, packet):
+        print(f'{self._name} : Received packet :\n\t{packet.type}')
+        
+        if packet.type == netpac.PACKET_TYPE.RIP:
+            self._handle_rip_packet(packet.data)
+            
+        elif packet.type == netpac.PACKET_TYPE.MPLS:
+            self._handle_mpls_packet(packet.data)
         
         # If packet is to its device
         for interface in self.interfaces:
@@ -173,3 +201,9 @@ class Router(Device):
         
         self.send_packet(packet)
         
+    # Packets interpreter funcs
+    def _handle_rip_packet(self, data : str):
+        pass
+    
+    def _handle_mpls_packet(self, data : str):
+        pass
