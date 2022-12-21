@@ -103,31 +103,32 @@ class GUI:
     # funkcja dodająca routery na przycisku
 
     def Router_Add(self):
-        global img
-        global img2
-        global img3
-        global img4
+        global photo1, photo2, photo3, photo4
 
-        img = PIL.ImageTk.PhotoImage(
-            Image.open("./frontend/assets/rot.jpg", "rb"))
-        img2 = PIL.ImageTk.PhotoImage(Image.open(
-            "./frontend/assets/rot.jpg", "rb"))
-        img3 = PIL.ImageTk.PhotoImage(Image.open(
-            "./frontend/assets/rot.jpg", "rb"))
-        img4 = PIL.ImageTk.PhotoImage(Image.open(
-            "./frontend/assets/rot.jpg", "rb"))
+        img = PIL.Image.open(
+            "C:\\ShareBigPack\\MPLS_WCY19IT1S0_Python\\mpls\\frontend\\rot.jpg")
+        img2 = PIL.Image.open(
+            "C:\\ShareBigPack\\MPLS_WCY19IT1S0_Python\\mpls\\frontend\\rot.jpg")
+        img3 = PIL.Image.open(
+            "C:\\ShareBigPack\\MPLS_WCY19IT1S0_Python\\mpls\\frontend\\rot.jpg")
+        img4 = PIL.Image.open(
+            "C:\\ShareBigPack\\MPLS_WCY19IT1S0_Python\\mpls\\frontend\\rot.jpg")
+        photo1 = PIL.ImageTk.PhotoImage(img)
+        photo2 = PIL.ImageTk.PhotoImage(img2)
+        photo3 = PIL.ImageTk.PhotoImage(img3)
+        photo4 = PIL.ImageTk.PhotoImage(img4)
         #global count_router
 
-        label_router = Label(image=img)
+        label_router = Label(image=photo1)
         label_router.bind("<Button-1>", self.open_setings_r1)
         label_router.place(x=200, y=80)
-        label2_router = Label(image=img2)
+        label2_router = Label(image=photo2)
         label2_router.bind("<Button-1>", self.open_setings_r2)
         label2_router.place(x=760, y=80)
-        label3_router = Label(image=img3)
+        label3_router = Label(image=photo3)
         label3_router.bind("<Button-1>", self.open_setings_r3)
         label3_router.place(x=200, y=300)
-        label4_router = Label(image=img4)
+        label4_router = Label(image=photo4)
         label4_router.bind("<Button-1>", self.open_setings_r4)
         label4_router.place(x=760, y=300)
         consoleOutputLabel.config(
