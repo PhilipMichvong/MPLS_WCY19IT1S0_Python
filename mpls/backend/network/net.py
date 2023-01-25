@@ -163,6 +163,15 @@ class Net:
         
         return net_addr, broadcast
     
+    # -- Get mask bits
+    @staticmethod
+    def get_mask_bits(mask : str) -> int:
+        for k, v in MASK.items():
+            if v == mask:
+                return k
+
+        raise KeyError(f'Invalid mask: "{mask}"!')
+       
     # -- Get (or if not existed - create new) network to specified IP address
     @staticmethod
     def assign_network(address : str, mask : str):

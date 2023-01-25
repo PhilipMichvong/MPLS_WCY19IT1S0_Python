@@ -2,6 +2,7 @@
 import backend.controller as ctl
 
 def do_tests():
+    print()
     print(60 * '=')
     print('|', end='')
     print("-- TEST 1 --".center(58), end='|\n')
@@ -13,7 +14,7 @@ def do_tests():
     
     ctl.Controller.clear()
     
-    
+    print()
     print(60 * '=')
     print('|', end='')
     print("-- TEST 2 --".center(58), end='|\n')
@@ -25,7 +26,7 @@ def do_tests():
 
     ctl.Controller.clear()
 
-
+    print()
     print(60 * '=')
     print('|', end='')
     print("-- TEST 3 --".center(58), end='|\n')
@@ -41,7 +42,7 @@ def do_tests():
     print('RESULTS:')
     print('--------')
     
-    T = [t1, t2]
+    T = [t1, t2, t3]
     for i, t in enumerate(T):
         if t:
             print(f'Test[{i+1}] : Passed!')

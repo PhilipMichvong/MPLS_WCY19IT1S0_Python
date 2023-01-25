@@ -144,10 +144,11 @@ class Router(Device):
             
         return f'''[Name]: {self._name}: 
     [Interfaces]: {self.interfaces} 
-    [Route Table]: {self.route_table}'''
+    [Route Table]:\n{self._repr_route_table()}'''
+
 
     # Config
-    def add_interface(self, int_name : str, int_address : str, int_mask : str):
+    def add_interface(self, int_name : str, int_address : str, int_mask : str) -> None:
         # Check if interface with specified name already exists
         for interface in self.interfaces:
             if int_name == interface.name:
@@ -162,8 +163,17 @@ class Router(Device):
             record = {"protocol" : 'C', "address": interface.network.address, "next_hop" : None, "interface" : interface.name, 'metric' : 0}
             self.route_table.append(record)
     
+    # Route Table
+    def _repr_route_table(self) -> str:
+        result = '\tProt\tAddr\t\tIntf\tMetric\tNext hop\n'
+        for record in self.route_table:
+            result += f'\t{record["protocol"]}\t{record["address"]}\t{record["interface"]}\t{record["metric"]}\t{record["next_hop"]}\n'
+            
+        return result
+            
+    
     # Packets
-    def send_packet(self, packet):
+    def send_packet(self, packet) -> None:
         print(f'{self._name} : Sending packet :\n\t{packet.type}')
         
         dest_net_addr, dest_net_broadcast = netnet.Net.compute_network_address(packet.addr_to, netnet.MASK[packet.mask_bits_to])
@@ -184,14 +194,14 @@ class Router(Device):
                 
         raise ValueError(f'{dest_net_addr} is not accesibble!')
     
-    def receive_packet(self, packet):
+    def receive_packet(self, packet) -> None:
         print(f'{self._name} : Received packet :\n\t{packet.type}')
         
         if packet.type == netpac.PACKET_TYPE.RIP:
-            self._handle_rip_packet(packet.data)
+            self._handle_rip_packet(packet)
             
         elif packet.type == netpac.PACKET_TYPE.MPLS:
-            self._handle_mpls_packet(packet.data)
+            self._handle_mpls_packet(packet)
         
         # If packet is to its device
         for interface in self.interfaces:
@@ -200,10 +210,72 @@ class Router(Device):
                 return
         
         self.send_packet(packet)
+    
         
     # Packets interpreter funcs
-    def _handle_rip_packet(self, data : str):
+    def _handle_rip_packet(self, packet) -> None:
+        print(f'\t{self._name}: RIP Data:')
+        # print(f'\t{packet.data.split("|")}')
+        # [protocol][address][next_hop][interface][metrics]
+        data = packet.data.split('|')
+        protocol = 'R'
+        address = data[1]
+        next_hop = packet.addr_from
+        metrics = int(data[4]) + 1
+
+        for interface in self.interfaces:
+            if interface.address == packet.addr_to:
+                intf_name = interface.name
+        
+        new_record = {  "protocol" : protocol, 
+                        "address": address, 
+                        "next_hop" : next_hop,
+                        "interface" : intf_name, 
+                        "metric" : metrics}
+        
+        # Check existing route table
+        for record in self.route_table:
+            # if specified network route is already stored
+            if record['address'] == new_record['address']:
+                # compare metrics
+                if record['metric'] > new_record['metric']:
+                    self.route_table.remove(record)
+                    self.route_table.append(new_record)
+                return
+
+        # If there is no specified network route in route table
+        #   then add new route
+        self.route_table.append(new_record)
+    
+    
+    def _handle_mpls_packet(self, packet) -> None:
         pass
     
-    def _handle_mpls_packet(self, data : str):
-        pass
+    
+    # RIP Distribution
+    def rip_distribute(self) -> None:
+        '''
+            RIP Packet
+                addr_to -> broadcast
+                data -> route_table record
+        '''
+                
+        for interface in self.interfaces:
+            addr_from = interface.address
+            addr_to = interface.network.broadcast
+            mask_bits = netnet.Net.get_mask_bits(interface.mask)
+            
+            for record in self.route_table:
+                data = ''
+                for key, value in record.items():
+                    data += str(value)
+                    data += '|'
+            
+                packet = netpac.Packet(addr_from=addr_from, 
+                                       addr_to=addr_to, 
+                                       mask_bits_from=mask_bits, 
+                                       mask_bits_to=mask_bits, 
+                                       type=netpac.PACKET_TYPE.RIP, 
+                                       data=data)
+
+                self.send_packet(packet)
