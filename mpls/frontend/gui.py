@@ -2,9 +2,11 @@
 #from backend.controller import Controller
 from tkinter import *
 import tkinter as tk
-
+import os
 import PIL.Image
 import PIL.ImageTk
+import pathlib
+import time
 jpg_path = './frontend/assets/'
 
 
@@ -46,14 +48,15 @@ class GUI:
             'arial', 10), command=lambda: self.PrintRouterSet(ipr1.get(), maskr1.get(), intr1.get()))
         ApplyButton.grid(row=6, column=1)
 
-    def PrintRouterSet(self, int, ip, mask):
+    def PrintRouterSet(self, ip, mask, int):
+        # print(ipr1.get(), maskr1.get())
         consoleOutputLabel.config(
             text=f"""
             =========================================
             Dodano router o nastepuajcych parametrach:
-                        ip: {ip}
-                        maska : {mask}
-                        interfejs: {int}
+                    ip: {ip}
+                    maska : {mask}
+                    interfejs: {int}
             =========================================
             """)
     # ustawienia do adresacji r2
@@ -130,17 +133,42 @@ class GUI:
 
     # funkcja dodająca routery na przycisku
 
+    def MPLS(self):
+
+        #  ===========  TODO: ANIMATION ============
+        global packet_animation, packet_animation2
+        jpg_path = pathlib.Path.absolute(
+            pathlib.Path('.\\frontend\\rot.jpg')
+        )
+        img_p = PIL.Image.open(
+            jpg_path)
+        img2_p = PIL.Image.open(
+            jpg_path)
+
+        packet_animation = PIL.ImageTk.PhotoImage(img_p)
+        packet_animation2 = PIL.ImageTk.PhotoImage(img2_p)
+
+        label_packet = Label(image=packet_animation)
+        label_packet.place(x=350, y=80)
+
+        # label_packet.place(x=350, y=80)
+
+        # label_packet.place(x=350, y=140)
+
     def Router_Add(self):
         global photo1, photo2, photo3, photo4
 
+        jpg_path = pathlib.Path.absolute(
+            pathlib.Path('.\\frontend\\rot.jpg')
+        )
         img = PIL.Image.open(
-            "C:\\ShareBigPack\\MPLS_WCY19IT1S0_Python\\mpls\\frontend\\rot.jpg")
+            jpg_path)
         img2 = PIL.Image.open(
-            "C:\\ShareBigPack\\MPLS_WCY19IT1S0_Python\\mpls\\frontend\\rot.jpg")
+            jpg_path)
         img3 = PIL.Image.open(
-            "C:\\ShareBigPack\\MPLS_WCY19IT1S0_Python\\mpls\\frontend\\rot.jpg")
+            jpg_path)
         img4 = PIL.Image.open(
-            "C:\\ShareBigPack\\MPLS_WCY19IT1S0_Python\\mpls\\frontend\\rot.jpg")
+            jpg_path)
         photo1 = PIL.ImageTk.PhotoImage(img)
         photo2 = PIL.ImageTk.PhotoImage(img2)
         photo3 = PIL.ImageTk.PhotoImage(img3)
@@ -163,42 +191,39 @@ class GUI:
             text=f">Dodano routery, kliknij na nie aby skonfigurowac")
 
     def Computer_Add(self):
-        global img_computer_1
-        global img_computer_2
-        global img_computer_3
-        global img_computer_4
+        global photo1_cmp
+        global photo2_cmp
+        global photo3_cmp
+        global photo4_cmp
+        jpg_path_comp = pathlib.Path.absolute(
+            pathlib.Path('.\\frontend\\computer.jpg')
+        )
+        img_comp = PIL.Image.open(
+            jpg_path_comp)
+        img2_comp = PIL.Image.open(
+            jpg_path_comp)
+        img3_comp = PIL.Image.open(
+            jpg_path_comp)
+        img4_comp = PIL.Image.open(
+            jpg_path_comp)
+        photo1_cmp = PIL.ImageTk.PhotoImage(img_comp)
+        photo2_cmp = PIL.ImageTk.PhotoImage(img2_comp)
+        photo3_cmp = PIL.ImageTk.PhotoImage(img3_comp)
+        photo4_cmp = PIL.ImageTk.PhotoImage(img4_comp)
+
+        label_comp = Label(image=photo1_cmp)
+        label_comp.place(x=100, y=80)
+        label_comp2 = Label(image=photo1_cmp)
+        label_comp2.place(x=840, y=80)
+        label_comp3 = Label(image=photo1_cmp)
+        label_comp3.place(x=100, y=300)
+        label_comp4 = Label(image=photo1_cmp)
+        label_comp4.place(x=840, y=300)
 
         consoleOutputLabel.config(
             text=f">Dodano Komputer - kliknij na nie aby skonfiguroawc")
 
         icon_size = Label()
-        # #count_computer == 0:
-        # if count_computer == 1:
-        #     label_router = Label(image=img)
-        #     label_router.place(x=140,y=80)
-        # if count_computer == 2:
-        #     label_router = Label(image=img)
-        #     label_router.place(x=140, y=80)
-        #     label2_router = Label(image=img2)
-        #     label2_router.place(x=700, y=80)
-        # if count_computer == 3:
-        #     label_router = Label(image=img)
-        #     label_router.place(x=140, y=80)
-        #     label2_router = Label(image=img2)
-        #     label2_router.place(x=700, y=80)
-        #     label3_router = Label(image=img3)
-        #     label3_router.place(x=140, y=300)
-        #
-        #
-        # if count_computer == 4:
-        #     label_router = Label(image=img)
-        #     label_router.place(x=140, y=80)
-        #     label2_router = Label(image=img2)
-        #     label2_router.place(x=700, y=80)
-        #     label3_router = Label(image=img3)
-        #     label3_router.place(x=140, y=300)
-        #     label4_router = Label(image=img4)
-        #     label4_router.place(x=700, y=300)
 
     def WindwowSettings(self, resolution: str, title: str):
         self.root.geometry(resolution)
@@ -219,7 +244,8 @@ class GUI:
             'arial', 10), command=lambda: self.Computer_Add())
         MLTPlabel = tk.Label(
             self.root, text="Rozpocznij symulaje", font=('Arial', 14))
-        MLTPbutton = tk.Button(self.root, text="MLTP", font=('arial', 10))
+        MLTPbutton = tk.Button(self.root, text="MLTP", font=(
+            'arial', 10), command=lambda: self.MPLS())
         CreditsLabel = tk.Label(self.root, text="""    Wykonali:
         Filip Szpregiel
         Bartlomiej Szykula
