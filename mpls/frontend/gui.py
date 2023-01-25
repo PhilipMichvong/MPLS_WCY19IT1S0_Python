@@ -2,9 +2,11 @@
 #from backend.controller import Controller
 from tkinter import *
 import tkinter as tk
-
+import os
 import PIL.Image
 import PIL.ImageTk
+import pathlib
+import time
 jpg_path = './frontend/assets/'
 
 
@@ -25,24 +27,42 @@ class GUI:
     def open_setings_r1(self, *args):
         set = tk.Tk()
         set.title(f"ustawienia router 1")
-        set.geometry("365x300")
+        set.geometry("170x200")
         consoleOutputLabel.config(text=">konfiguracja dla router 1")
         ip = tk.Label(set, text="interfejs:")
         ip.grid(row=0, column=1, padx=3)
+        global intr1
         intr1 = tk.Entry(set)
         intr1.grid(row=1, column=1, padx=3)
         ip = tk.Label(set, text="wprowadz ip:")
         ip.grid(row=2, column=1, padx=3)
+        global ipr1
         ipr1 = tk.Entry(set)
         ipr1.grid(row=3, column=1, padx=3)
         ip = tk.Label(set, text="wprowadz maske:")
         ip.grid(row=4, column=1, padx=3)
+        global maskr1
         maskr1 = tk.Entry(set)
         maskr1.grid(row=5, column=1, padx=3)
+        ApplyButton = tk.Button(set, text="Apply sethings", font=(
+            'arial', 10), command=lambda: self.PrintRouterSet(ipr1.get(), maskr1.get(), intr1.get()))
+        ApplyButton.grid(row=6, column=1)
 
+    def PrintRouterSet(self, ip, mask, int):
+        # print(ipr1.get(), maskr1.get())
+        consoleOutputLabel.config(
+            text=f"""
+            =========================================
+            Dodano router o nastepuajcych parametrach:
+                    ip: {ip}
+                    maska : {mask}
+                    interfejs: {int}
+            =========================================
+            """)
     # ustawienia do adresacji r2
 
     def open_setings_r2(self, *args):
+        global intr2, ipr2, maskr2
         set = tk.Tk()
         set.title(f"ustawienia router 2")
         set.geometry("365x300")
@@ -59,10 +79,14 @@ class GUI:
         ip.grid(row=4, column=1, padx=3)
         maskr2 = tk.Entry(set)
         maskr2.grid(row=5, column=1, padx=3)
+        ApplyButton = tk.Button(set, text="Apply sethings", font=(
+            'arial', 10), command=lambda: self.PrintRouterSet(ipr2.get(), maskr2.get(), intr2.get()))
+        ApplyButton.grid(row=6, column=1)
 
     # ustawienia do adresacji r3
 
     def open_setings_r3(self, *args):
+        global intr3, ipr3, maskr3
         set = tk.Tk()
         set.title(f"ustawienia router 3")
         set.geometry("365x300")
@@ -79,10 +103,14 @@ class GUI:
         ip.grid(row=4, column=1, padx=3)
         maskr3 = tk.Entry(set)
         maskr3.grid(row=5, column=1, padx=3)
+        ApplyButton = tk.Button(set, text="Apply sethings", font=(
+            'arial', 10), command=lambda: self.PrintRouterSet(ipr3.get(), maskr3.get(), intr3.get()))
+        ApplyButton.grid(row=6, column=1)
 
     # ustawienia do adresacji r4
 
     def open_setings_r4(self, *args):
+        global intr4, ipr4, maskr4
         set = tk.Tk()
         set.title(f"ustawienia router 4")
         set.geometry("365x300")
@@ -99,20 +127,48 @@ class GUI:
         ip.grid(row=4, column=1, padx=3)
         maskr4 = tk.Entry(set)
         maskr4.grid(row=5, column=1, padx=3)
+        ApplyButton = tk.Button(set, text="Apply sethings", font=(
+            'arial', 10), command=lambda: self.PrintRouterSet(ipr4.get(), maskr4.get(), intr4.get()))
+        ApplyButton.grid(row=6, column=1)
 
     # funkcja dodająca routery na przycisku
+
+    def MPLS(self):
+
+        #  ===========  TODO: ANIMATION ============
+        global packet_animation, packet_animation2
+        jpg_path = pathlib.Path.absolute(
+            pathlib.Path('.\\frontend\\rot.jpg')
+        )
+        img_p = PIL.Image.open(
+            jpg_path)
+        img2_p = PIL.Image.open(
+            jpg_path)
+
+        packet_animation = PIL.ImageTk.PhotoImage(img_p)
+        packet_animation2 = PIL.ImageTk.PhotoImage(img2_p)
+
+        label_packet = Label(image=packet_animation)
+        label_packet.place(x=350, y=80)
+
+        # label_packet.place(x=350, y=80)
+
+        # label_packet.place(x=350, y=140)
 
     def Router_Add(self):
         global photo1, photo2, photo3, photo4
 
+        jpg_path = pathlib.Path.absolute(
+            pathlib.Path('.\\frontend\\rot.jpg')
+        )
         img = PIL.Image.open(
-            "C:\\ShareBigPack\\MPLS_WCY19IT1S0_Python\\mpls\\frontend\\rot.jpg")
+            jpg_path)
         img2 = PIL.Image.open(
-            "C:\\ShareBigPack\\MPLS_WCY19IT1S0_Python\\mpls\\frontend\\rot.jpg")
+            jpg_path)
         img3 = PIL.Image.open(
-            "C:\\ShareBigPack\\MPLS_WCY19IT1S0_Python\\mpls\\frontend\\rot.jpg")
+            jpg_path)
         img4 = PIL.Image.open(
-            "C:\\ShareBigPack\\MPLS_WCY19IT1S0_Python\\mpls\\frontend\\rot.jpg")
+            jpg_path)
         photo1 = PIL.ImageTk.PhotoImage(img)
         photo2 = PIL.ImageTk.PhotoImage(img2)
         photo3 = PIL.ImageTk.PhotoImage(img3)
@@ -135,42 +191,39 @@ class GUI:
             text=f">Dodano routery, kliknij na nie aby skonfigurowac")
 
     def Computer_Add(self):
-        global img_computer_1
-        global img_computer_2
-        global img_computer_3
-        global img_computer_4
+        global photo1_cmp
+        global photo2_cmp
+        global photo3_cmp
+        global photo4_cmp
+        jpg_path_comp = pathlib.Path.absolute(
+            pathlib.Path('.\\frontend\\computer.jpg')
+        )
+        img_comp = PIL.Image.open(
+            jpg_path_comp)
+        img2_comp = PIL.Image.open(
+            jpg_path_comp)
+        img3_comp = PIL.Image.open(
+            jpg_path_comp)
+        img4_comp = PIL.Image.open(
+            jpg_path_comp)
+        photo1_cmp = PIL.ImageTk.PhotoImage(img_comp)
+        photo2_cmp = PIL.ImageTk.PhotoImage(img2_comp)
+        photo3_cmp = PIL.ImageTk.PhotoImage(img3_comp)
+        photo4_cmp = PIL.ImageTk.PhotoImage(img4_comp)
+
+        label_comp = Label(image=photo1_cmp)
+        label_comp.place(x=100, y=80)
+        label_comp2 = Label(image=photo1_cmp)
+        label_comp2.place(x=840, y=80)
+        label_comp3 = Label(image=photo1_cmp)
+        label_comp3.place(x=100, y=300)
+        label_comp4 = Label(image=photo1_cmp)
+        label_comp4.place(x=840, y=300)
 
         consoleOutputLabel.config(
             text=f">Dodano Komputer - kliknij na nie aby skonfiguroawc")
 
         icon_size = Label()
-        # #count_computer == 0:
-        # if count_computer == 1:
-        #     label_router = Label(image=img)
-        #     label_router.place(x=140,y=80)
-        # if count_computer == 2:
-        #     label_router = Label(image=img)
-        #     label_router.place(x=140, y=80)
-        #     label2_router = Label(image=img2)
-        #     label2_router.place(x=700, y=80)
-        # if count_computer == 3:
-        #     label_router = Label(image=img)
-        #     label_router.place(x=140, y=80)
-        #     label2_router = Label(image=img2)
-        #     label2_router.place(x=700, y=80)
-        #     label3_router = Label(image=img3)
-        #     label3_router.place(x=140, y=300)
-        #
-        #
-        # if count_computer == 4:
-        #     label_router = Label(image=img)
-        #     label_router.place(x=140, y=80)
-        #     label2_router = Label(image=img2)
-        #     label2_router.place(x=700, y=80)
-        #     label3_router = Label(image=img3)
-        #     label3_router.place(x=140, y=300)
-        #     label4_router = Label(image=img4)
-        #     label4_router.place(x=700, y=300)
 
     def WindwowSettings(self, resolution: str, title: str):
         self.root.geometry(resolution)
@@ -191,7 +244,8 @@ class GUI:
             'arial', 10), command=lambda: self.Computer_Add())
         MLTPlabel = tk.Label(
             self.root, text="Rozpocznij symulaje", font=('Arial', 14))
-        MLTPbutton = tk.Button(self.root, text="MLTP", font=('arial', 10))
+        MLTPbutton = tk.Button(self.root, text="MLTP", font=(
+            'arial', 10), command=lambda: self.MPLS())
         CreditsLabel = tk.Label(self.root, text="""    Wykonali:
         Filip Szpregiel
         Bartlomiej Szykula
