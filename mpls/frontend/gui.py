@@ -25,24 +25,41 @@ class GUI:
     def open_setings_r1(self, *args):
         set = tk.Tk()
         set.title(f"ustawienia router 1")
-        set.geometry("365x300")
+        set.geometry("170x200")
         consoleOutputLabel.config(text=">konfiguracja dla router 1")
         ip = tk.Label(set, text="interfejs:")
         ip.grid(row=0, column=1, padx=3)
+        global intr1
         intr1 = tk.Entry(set)
         intr1.grid(row=1, column=1, padx=3)
         ip = tk.Label(set, text="wprowadz ip:")
         ip.grid(row=2, column=1, padx=3)
+        global ipr1
         ipr1 = tk.Entry(set)
         ipr1.grid(row=3, column=1, padx=3)
         ip = tk.Label(set, text="wprowadz maske:")
         ip.grid(row=4, column=1, padx=3)
+        global maskr1
         maskr1 = tk.Entry(set)
         maskr1.grid(row=5, column=1, padx=3)
+        ApplyButton = tk.Button(set, text="Apply sethings", font=(
+            'arial', 10), command=lambda: self.PrintRouterSet(ipr1.get(), maskr1.get(), intr1.get()))
+        ApplyButton.grid(row=6, column=1)
 
+    def PrintRouterSet(self, int, ip, mask):
+        consoleOutputLabel.config(
+            text=f"""
+            =========================================
+            Dodano router o nastepuajcych parametrach:
+                        ip: {ip}
+                        maska : {mask}
+                        interfejs: {int}
+            =========================================
+            """)
     # ustawienia do adresacji r2
 
     def open_setings_r2(self, *args):
+        global intr2, ipr2, maskr2
         set = tk.Tk()
         set.title(f"ustawienia router 2")
         set.geometry("365x300")
@@ -59,10 +76,14 @@ class GUI:
         ip.grid(row=4, column=1, padx=3)
         maskr2 = tk.Entry(set)
         maskr2.grid(row=5, column=1, padx=3)
+        ApplyButton = tk.Button(set, text="Apply sethings", font=(
+            'arial', 10), command=lambda: self.PrintRouterSet(ipr2.get(), maskr2.get(), intr2.get()))
+        ApplyButton.grid(row=6, column=1)
 
     # ustawienia do adresacji r3
 
     def open_setings_r3(self, *args):
+        global intr3, ipr3, maskr3
         set = tk.Tk()
         set.title(f"ustawienia router 3")
         set.geometry("365x300")
@@ -79,10 +100,14 @@ class GUI:
         ip.grid(row=4, column=1, padx=3)
         maskr3 = tk.Entry(set)
         maskr3.grid(row=5, column=1, padx=3)
+        ApplyButton = tk.Button(set, text="Apply sethings", font=(
+            'arial', 10), command=lambda: self.PrintRouterSet(ipr3.get(), maskr3.get(), intr3.get()))
+        ApplyButton.grid(row=6, column=1)
 
     # ustawienia do adresacji r4
 
     def open_setings_r4(self, *args):
+        global intr4, ipr4, maskr4
         set = tk.Tk()
         set.title(f"ustawienia router 4")
         set.geometry("365x300")
@@ -99,6 +124,9 @@ class GUI:
         ip.grid(row=4, column=1, padx=3)
         maskr4 = tk.Entry(set)
         maskr4.grid(row=5, column=1, padx=3)
+        ApplyButton = tk.Button(set, text="Apply sethings", font=(
+            'arial', 10), command=lambda: self.PrintRouterSet(ipr4.get(), maskr4.get(), intr4.get()))
+        ApplyButton.grid(row=6, column=1)
 
     # funkcja dodająca routery na przycisku
 
