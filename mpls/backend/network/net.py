@@ -79,7 +79,7 @@ class Net:
     # DELIVERING PACKETS
     # -- Deliver packet via network to specified device
     def deliver_packet(self, packet, next_hop = None):
-        print(f'NET : {self.address} : Delivering packet :\n\t{packet.type}')
+        print(f'NET : {self.address} : Delivering packet ...\n')
         # Get next device to deliver the packet
         #   -- to further device
         if next_hop is None:

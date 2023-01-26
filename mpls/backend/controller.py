@@ -252,6 +252,9 @@ class Controller:
                 # print(f'Test[{i+1}] : {tests_names[i]} : Not Passed!')
             app.console_log(log)
             
+            log = "Check out logs!"
+            app.console_log(log)
+            
         if all(T):
             global line, line2, line3, line4
             jpg_path = pathlib.Path.absolute(

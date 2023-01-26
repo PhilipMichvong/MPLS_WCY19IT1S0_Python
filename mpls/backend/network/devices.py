@@ -110,8 +110,8 @@ class PC(Device):
 
     # Packets
     def send_packet(self, packet):
-        packet.label = -1
-        print(f'{self._name} : Sending packet :\n\t{packet.type}')
+        packet.label = 0
+        print(f'{self._name} : Sending packet :\n\t{packet.type}\n')
         
         if self.gateway is None:
             raise AttributeError('Gateway is not specified!')
@@ -124,7 +124,7 @@ class PC(Device):
         interface.network.deliver_packet(packet, next_hop=self.gateway)
         
     def receive_packet(self, packet):
-        print(f'{self._name} : Received packet :\n\t{packet.type = }\n{packet.data = }')
+        print(f'{self._name} : Received packet :\n\t{packet.type}\n\t{packet.data = }')
         if packet.type == netpac.PACKET_TYPE.ICMP and packet.data == 'REQ':
             addr_from = packet.addr_from
             addr_to = packet.addr_to
@@ -215,11 +215,15 @@ class Router(Device):
         dest_net_addr, dest_net_broadcast = netnet.Net.compute_network_address(packet.addr_to, netnet.MASK[packet.mask_bits_to])
         
         # MPLS Routing
-        if packet.label != 0 and packet.label != -1:
+        if packet.label != 0:
             for record in self.mpls_table:
                 if packet.label == record["in_label"]:
                     # Label swap
-                    print(f'\t{self._name}: SWAP {packet.label} -> {record["out_label"]}')
+                    if record["out_label"] == 0:
+                        print(f'\t{self._name}: POP {packet.label} -> {record["out_label"]}\n')
+                    else:
+                        print(f'\t{self._name}: SWAP {packet.label} -> {record["out_label"]}\n')
+                        
                     packet.label = record["out_label"]
                     intf_name = record["interface"]
                     interface = self._get_interface_by_name(intf_name)
@@ -237,10 +241,10 @@ class Router(Device):
                         interface.network.deliver_packet(packet=packet, next_hop=next_hop)
                     return
                 
-        if packet.label == -1:
+        if packet.label == 0:
             for record in self.mpls_table:
                 if record["prefix"] == dest_net_addr:
-                    print(f'\t{self._name}: PUSH {packet.label} -> {record["out_label"]}')
+                    print(f'\t{self._name}: PUSH {packet.label} -> {record["out_label"]}\n')
                     packet.label = record["out_label"]
                     intf_name = record["interface"]
                     interface = self._get_interface_by_name(intf_name)
