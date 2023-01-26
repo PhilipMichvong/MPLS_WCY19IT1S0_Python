@@ -328,7 +328,7 @@ class GUI:
             'arial', 10), command=lambda: self.Devices_add())
         MLTPlabel = tk.Label(
             self.root, text="Rozpocznij symulaje", font=('Arial', 14))
-        MLTPbutton = tk.Button(self.root, text="MLTP", font=(
+        MLTPbutton = tk.Button(self.root, text="MPLS", font=(
             'arial', 10), command=lambda: self.MPLS())
         CreditsLabel = tk.Label(self.root, text="""    Wykonali:
         Filip Szpregiel

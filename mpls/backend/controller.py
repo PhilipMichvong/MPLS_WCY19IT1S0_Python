@@ -2,6 +2,10 @@ import backend.network.packet as netpac
 import backend.network.devices as netdev
 import backend.network.interface as netint
 import backend.network.net as netnet
+import PIL.Image
+import PIL.ImageTk
+from tkinter import *
+import pathlib
 # from frontend.gui import GUI
 
 class Controller:
@@ -167,6 +171,34 @@ class Controller:
             
             app.console_log("Konfiguracja domyślna załadowana.")
             
+            global line, line2, line3, line4
+            jpg_path = pathlib.Path.absolute(
+                pathlib.Path('.\\frontend\\line.png')
+            )
+            jpg_path2 = pathlib.Path.absolute(
+                pathlib.Path('.\\frontend\\line_hori.png')
+            )
+            img = PIL.Image.open(
+                jpg_path)
+            img2 = PIL.Image.open(
+            jpg_path)
+            img3 = PIL.Image.open(
+            jpg_path2)
+            img4 = PIL.Image.open(
+            jpg_path2)
+            line = PIL.ImageTk.PhotoImage(img)
+            line2 = PIL.ImageTk.PhotoImage(img2)
+            line3 = PIL.ImageTk.PhotoImage(img3)
+            line4 = PIL.ImageTk.PhotoImage(img4)
+            label_line = Label(image=line)
+            label_line.place(x=274,y=115)
+            label_line2 = Label(image=line2)
+            label_line2.place(x=274, y=330)
+            label_line3 = Label(image=line3)
+            label_line3.place(x=230, y=150)
+            label_line4 = Label(image=line4)
+            label_line4.place(x=788, y =150)
+            
         except Exception as e:
             print('load_default_config : Configuration error')
             print(type(e))
@@ -192,6 +224,35 @@ class Controller:
                 log = f'Test[{i+1}] : {tests_names[i]} : Not Passed!'
                 # print(f'Test[{i+1}] : {tests_names[i]} : Not Passed!')
             app.console_log(log)
+            
+        if all(T):
+            global line, line2, line3, line4
+            jpg_path = pathlib.Path.absolute(
+                pathlib.Path('.\\frontend\\line.png')
+            )
+            jpg_path2 = pathlib.Path.absolute(
+                pathlib.Path('.\\frontend\\line_hori.png')
+            )
+            img = PIL.Image.open(
+                jpg_path)
+            img2 = PIL.Image.open(
+            jpg_path)
+            img3 = PIL.Image.open(
+            jpg_path2)
+            img4 = PIL.Image.open(
+            jpg_path2)
+            line = PIL.ImageTk.PhotoImage(img)
+            line2 = PIL.ImageTk.PhotoImage(img2)
+            line3 = PIL.ImageTk.PhotoImage(img3)
+            line4 = PIL.ImageTk.PhotoImage(img4)
+            label_line = Label(image=line)
+            label_line.place(x=274,y=115)
+            label_line2 = Label(image=line2)
+            label_line2.place(x=274, y=330)
+            label_line3 = Label(image=line3)
+            label_line3.place(x=230, y=150)
+            label_line4 = Label(image=line4)
+            label_line4.place(x=788, y =150)
     
     @staticmethod
     def test_com():
@@ -207,7 +268,7 @@ class Controller:
             
             packet = netpac.Packet(addr_from=addr_from, addr_to=addr_to,
                                    mask_bits_from=mask_bits_from, mask_bits_to=mask_bits_to,
-                                   type=netpac.PACKET_TYPE.MPLS, data="DATA")
+                                   type=netpac.PACKET_TYPE.ICMP, data="REQ")
 
             Controller.ROUTERS[0].send_packet(packet)
             
@@ -236,6 +297,37 @@ class Controller:
             print(e)
             return False
         
+        '''
+            *** LDP DISTRIBUTION ***
+        '''
+        try:
+            print('LDP DISTRIBUTION:\n')
+            for _ in range(2):
+                for router in Controller.ROUTERS:
+                    router.ldp_distribute()
+                    
+        except Exception as e:
+            print('test_rip : LDP distribution Error')
+            print(type(e))
+            print(e)
+            return False
+        
+        '''
+            *** AFTER LDP SHOWCASE ***
+        '''
+        try:
+            print('\nAFTER RIP SHOWCASE:\n')
+            print('ROUTERS - ROUTE TABLES:')
+            for router in Controller.ROUTERS:
+                print(router)
+            
+            print(40 * '-')
+        except Exception as e:
+            print('test_rip : After RIP Showcase error')
+            print(type(e))
+            print(e)
+            return False
+        
         # ---------------------------------------------------------------------------------
         '''
             *** Scenario 1 ***
@@ -250,7 +342,7 @@ class Controller:
             
             packet = netpac.Packet(addr_from=addr_from, addr_to=addr_to,
                                    mask_bits_from=mask_bits_from, mask_bits_to=mask_bits_to,
-                                   type=netpac.PACKET_TYPE.MPLS, data="DATA")
+                                   type=netpac.PACKET_TYPE.ICMP, data="REQ")
             print(40 * '-')
 
             Controller.PCS[0].send_packet(packet)
@@ -276,7 +368,7 @@ class Controller:
             
             packet = netpac.Packet(addr_from=addr_from, addr_to=addr_to,
                                    mask_bits_from=mask_bits_from, mask_bits_to=mask_bits_to,
-                                   type=netpac.PACKET_TYPE.MPLS, data="DATA")
+                                   type=netpac.PACKET_TYPE.ICMP, data="REQ")
             print(40 * '-')
 
             Controller.PCS[0].send_packet(packet)
@@ -302,7 +394,7 @@ class Controller:
             
             packet = netpac.Packet(addr_from=addr_from, addr_to=addr_to,
                                    mask_bits_from=mask_bits_from, mask_bits_to=mask_bits_to,
-                                   type=netpac.PACKET_TYPE.MPLS, data="DATA")
+                                   type=netpac.PACKET_TYPE.ICMP, data="REQ")
             print(40 * '-')
 
             Controller.PCS[0].send_packet(packet)

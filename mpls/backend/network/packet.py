@@ -3,7 +3,8 @@ from backend.network.net import MASK
 
 class PACKET_TYPE(Enum):
     RIP = 0
-    MPLS = 1
+    LDP = 1
+    ICMP = 2
     
 
 class Packet:
@@ -13,6 +14,7 @@ class Packet:
         self.addr_to = addr_to
         self.mask_bits_to = mask_bits_from
         self.type = type
+        self.label = -1
         self.data = data
         
     def __repr__(self) -> str:
