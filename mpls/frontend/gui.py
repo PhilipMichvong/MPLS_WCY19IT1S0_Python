@@ -22,7 +22,7 @@ class GUI:
         self.console_lines = []
         self.console_lines_max = 7
         
-        self.WindwowSettings("1280x720", "apka")
+        self.WindwowSettings("1280x720", "MPLS simulator MAST")
         self.ToolBox()
         self.MiddlePart()
         self.consoleOutputLabel = self.ConsoleOutputPart()
@@ -45,13 +45,62 @@ class GUI:
     def open_setings_r1(self, *args):
         set = tk.Tk()
         set.title(f"ustawienia router 1")
-        set.geometry("170x200")
+        set.geometry("600x300")
         self.consoleOutputLabel.config(text=">konfiguracja dla router 1")
         ip = tk.Label(set, text="interfejs:")
         ip.grid(row=0, column=1, padx=3)
         global intr1
         intr1 = tk.Entry(set)
         intr1.grid(row=1, column=1, padx=3)
+        
+        int_text_label = tk.Label(set, text="Interfejs:")
+        int_text_label.grid(row = 1, column=2, padx=3)
+        int_text = tk.Label(set, text=Ctlr.get_router_data(0, 'interface', 0))
+        int_text.grid(row = 2, column=2, padx=3)
+        
+        ip_text_label = tk.Label(set, text="Adres:")
+        ip_text_label.grid(row = 3, column=2, padx=3)
+        ip_text = tk.Label(set, text=Ctlr.get_router_data(0, 'address', 0))
+        ip_text.grid(row = 4, column=2, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Maska:")
+        mask_text_label.grid(row = 5, column=2, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_router_data(0, 'mask', 0))
+        mask_text.grid(row = 6, column=2, padx=3)
+        
+        
+        int_text_label = tk.Label(set, text="Interfejs:")
+        int_text_label.grid(row = 1, column=3, padx=3)
+        int_text = tk.Label(set, text=Ctlr.get_router_data(0, 'interface', 1))
+        int_text.grid(row = 2, column=3, padx=3)
+        
+        ip_text_label = tk.Label(set, text="Adres:")
+        ip_text_label.grid(row = 3, column=3, padx=3)
+        ip_text = tk.Label(set, text=Ctlr.get_router_data(0, 'address', 1))
+        ip_text.grid(row = 4, column=3, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Maska:")
+        mask_text_label.grid(row = 5, column=3, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_router_data(0, 'mask', 1))
+        mask_text.grid(row = 6, column=3, padx=3)
+        
+        
+        int_text_label = tk.Label(set, text="Interfejs:")
+        int_text_label.grid(row = 1, column=4, padx=3)
+        int_text = tk.Label(set, text=Ctlr.get_router_data(0, 'interface', 2))
+        int_text.grid(row = 2, column=4, padx=3)
+        
+        ip_text_label = tk.Label(set, text="Adres:")
+        ip_text_label.grid(row = 3, column=4, padx=3)
+        ip_text = tk.Label(set, text=Ctlr.get_router_data(0, 'address', 2))
+        ip_text.grid(row = 4, column=4, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Maska:")
+        mask_text_label.grid(row = 5, column=4, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_router_data(0, 'mask', 2))
+        mask_text.grid(row = 6, column=4, padx=3)
+        
+        
         ip = tk.Label(set, text="wprowadz ip:")
         ip.grid(row=2, column=1, padx=3)
         global ipr1
@@ -72,8 +121,56 @@ class GUI:
         global intr2, ipr2, maskr2
         set = tk.Tk()
         set.title(f"ustawienia router 2")
-        set.geometry("365x300")
+        set.geometry("600x300")
         self.consoleOutputLabel.config(text=">konfiguracja dla router 1")
+        
+        int_text_label = tk.Label(set, text="Interfejs:")
+        int_text_label.grid(row = 1, column=2, padx=3)
+        int_text = tk.Label(set, text=Ctlr.get_router_data(1, 'interface', 0))
+        int_text.grid(row = 2, column=2, padx=3)
+        
+        ip_text_label = tk.Label(set, text="Adres:")
+        ip_text_label.grid(row = 3, column=2, padx=3)
+        ip_text = tk.Label(set, text=Ctlr.get_router_data(1, 'address', 0))
+        ip_text.grid(row = 4, column=2, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Maska:")
+        mask_text_label.grid(row = 5, column=2, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_router_data(1, 'mask', 0))
+        mask_text.grid(row = 6, column=2, padx=3)
+        
+        
+        int_text_label = tk.Label(set, text="Interfejs:")
+        int_text_label.grid(row = 1, column=3, padx=3)
+        int_text = tk.Label(set, text=Ctlr.get_router_data(1, 'interface', 1))
+        int_text.grid(row = 2, column=3, padx=3)
+        
+        ip_text_label = tk.Label(set, text="Adres:")
+        ip_text_label.grid(row = 3, column=3, padx=3)
+        ip_text = tk.Label(set, text=Ctlr.get_router_data(1, 'address', 1))
+        ip_text.grid(row = 4, column=3, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Maska:")
+        mask_text_label.grid(row = 5, column=3, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_router_data(1, 'mask', 1))
+        mask_text.grid(row = 6, column=3, padx=3)
+        
+        
+        int_text_label = tk.Label(set, text="Interfejs:")
+        int_text_label.grid(row = 1, column=4, padx=3)
+        int_text = tk.Label(set, text=Ctlr.get_router_data(1, 'interface', 2))
+        int_text.grid(row = 2, column=4, padx=3)
+        
+        ip_text_label = tk.Label(set, text="Adres:")
+        ip_text_label.grid(row = 3, column=4, padx=3)
+        ip_text = tk.Label(set, text=Ctlr.get_router_data(1, 'address', 2))
+        ip_text.grid(row = 4, column=4, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Maska:")
+        mask_text_label.grid(row = 5, column=4, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_router_data(1, 'mask', 2))
+        mask_text.grid(row = 6, column=4, padx=3)
+        
         ip = tk.Label(set, text="interfejs:")
         ip.grid(row=0, column=1, padx=3)
         intr2 = tk.Entry(set)
@@ -94,7 +191,7 @@ class GUI:
         global intr3, ipr3, maskr3
         set = tk.Tk()
         set.title(f"ustawienia router 3")
-        set.geometry("365x300")
+        set.geometry("600x300")
         self.consoleOutputLabel.config(text=">konfiguracja dla router 1")
         ip = tk.Label(set, text="interfejs:")
         ip.grid(row=0, column=1, padx=3)
@@ -116,7 +213,105 @@ class GUI:
         global intr4, ipr4, maskr4
         set = tk.Tk()
         set.title(f"ustawienia router 4")
-        set.geometry("365x300")
+        set.geometry("600x300")
+        
+        
+        int_text_label = tk.Label(set, text="Interfejs:")
+        int_text_label.grid(row = 1, column=2, padx=3)
+        int_text = tk.Label(set, text=Ctlr.get_router_data(3, 'interface', 0))
+        int_text.grid(row = 2, column=2, padx=3)
+        
+        ip_text_label = tk.Label(set, text="Adres:")
+        ip_text_label.grid(row = 3, column=2, padx=3)
+        ip_text = tk.Label(set, text=Ctlr.get_router_data(3, 'address', 0))
+        ip_text.grid(row = 4, column=2, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Maska:")
+        mask_text_label.grid(row = 5, column=2, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_router_data(3, 'mask', 0))
+        mask_text.grid(row = 6, column=2, padx=3)
+        
+        
+        int_text_label = tk.Label(set, text="Interfejs:")
+        int_text_label.grid(row = 1, column=3, padx=3)
+        int_text = tk.Label(set, text=Ctlr.get_router_data(3, 'interface', 1))
+        int_text.grid(row = 2, column=3, padx=3)
+        
+        ip_text_label = tk.Label(set, text="Adres:")
+        ip_text_label.grid(row = 3, column=3, padx=3)
+        ip_text = tk.Label(set, text=Ctlr.get_router_data(3, 'address', 1))
+        ip_text.grid(row = 4, column=3, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Maska:")
+        mask_text_label.grid(row = 5, column=3, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_router_data(3, 'mask', 1))
+        mask_text.grid(row = 6, column=3, padx=3)
+        
+        
+        int_text_label = tk.Label(set, text="Interfejs:")
+        int_text_label.grid(row = 1, column=4, padx=3)
+        int_text = tk.Label(set, text=Ctlr.get_router_data(3, 'interface', 2))
+        int_text.grid(row = 2, column=4, padx=3)
+        
+        ip_text_label = tk.Label(set, text="Adres:")
+        ip_text_label.grid(row = 3, column=4, padx=3)
+        ip_text = tk.Label(set, text=Ctlr.get_router_data(3, 'address', 2))
+        ip_text.grid(row = 4, column=4, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Maska:")
+        mask_text_label.grid(row = 5, column=4, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_router_data(3, 'mask', 2))
+        mask_text.grid(row = 6, column=4, padx=3)
+        
+        
+        int_text_label = tk.Label(set, text="Interfejs:")
+        int_text_label.grid(row = 1, column=2, padx=3)
+        int_text = tk.Label(set, text=Ctlr.get_router_data(2, 'interface', 0))
+        int_text.grid(row = 2, column=2, padx=3)
+        
+        ip_text_label = tk.Label(set, text="Adres:")
+        ip_text_label.grid(row = 3, column=2, padx=3)
+        ip_text = tk.Label(set, text=Ctlr.get_router_data(2, 'address', 0))
+        ip_text.grid(row = 4, column=2, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Maska:")
+        mask_text_label.grid(row = 5, column=2, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_router_data(2, 'mask', 0))
+        mask_text.grid(row = 6, column=2, padx=3)
+        
+        
+        int_text_label = tk.Label(set, text="Interfejs:")
+        int_text_label.grid(row = 1, column=3, padx=3)
+        int_text = tk.Label(set, text=Ctlr.get_router_data(2, 'interface', 1))
+        int_text.grid(row = 2, column=3, padx=3)
+        
+        ip_text_label = tk.Label(set, text="Adres:")
+        ip_text_label.grid(row = 3, column=3, padx=3)
+        ip_text = tk.Label(set, text=Ctlr.get_router_data(2, 'address', 1))
+        ip_text.grid(row = 4, column=3, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Maska:")
+        mask_text_label.grid(row = 5, column=3, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_router_data(2, 'mask', 1))
+        mask_text.grid(row = 6, column=3, padx=3)
+        
+        
+        int_text_label = tk.Label(set, text="Interfejs:")
+        int_text_label.grid(row = 1, column=4, padx=3)
+        int_text = tk.Label(set, text=Ctlr.get_router_data(2, 'interface', 2))
+        int_text.grid(row = 2, column=4, padx=3)
+        
+        ip_text_label = tk.Label(set, text="Adres:")
+        ip_text_label.grid(row = 3, column=4, padx=3)
+        ip_text = tk.Label(set, text=Ctlr.get_router_data(2, 'address', 2))
+        ip_text.grid(row = 4, column=4, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Maska:")
+        mask_text_label.grid(row = 5, column=4, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_router_data(2, 'mask', 2))
+        mask_text.grid(row = 6, column=4, padx=3)
+            
+        
         self.consoleOutputLabel.config(text=">konfiguracja dla router 1")
         ip = tk.Label(set, text="interfejs:")
         ip.grid(row=0, column=1, padx=3)
@@ -138,7 +333,28 @@ class GUI:
     def open_setings_c1(self, *args):
         set = tk.Tk()
         set.title("ustawienia komputera 1")
-        set.geometry("365x300")
+        set.geometry("400x300")
+        
+        int_text_label = tk.Label(set, text="Interfejs:")
+        int_text_label.grid(row = 1, column=2, padx=3)
+        int_text = tk.Label(set, text=Ctlr.get_pc_data(0, 'interface'))
+        int_text.grid(row = 2, column=2, padx=3)
+        
+        ip_text_label = tk.Label(set, text="Adres:")
+        ip_text_label.grid(row = 3, column=2, padx=3)
+        ip_text = tk.Label(set, text=Ctlr.get_pc_data(0, 'address'))
+        ip_text.grid(row = 4, column=2, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Maska:")
+        mask_text_label.grid(row = 5, column=2, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_pc_data(0, 'mask'))
+        mask_text.grid(row = 6, column=2, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Brama domyślna:")
+        mask_text_label.grid(row = 7, column=2, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_pc_data(0, 'gateway'))
+        mask_text.grid(row = 8, column=2, padx=3)
+        
         title = tk.Label(set, text="brama:")
         title.grid(row=0, column=1, padx=3)
         gateway1 = tk.Entry(set)
@@ -164,12 +380,31 @@ class GUI:
     def open_setings_c2(self, *args):
         set = tk.Tk()
         set.title("ustawienia komputera 2")
-        set.geometry("365x300")
+        set.geometry("400x300")
         title = tk.Label(set, text="brama:")
         title.grid(row=0, column=1, padx=3)
         gateway2 = tk.Entry(set)
         gateway2.grid(row=1, column=1, padx=3)
         
+        int_text_label = tk.Label(set, text="Interfejs:")
+        int_text_label.grid(row = 1, column=2, padx=3)
+        int_text = tk.Label(set, text=Ctlr.get_pc_data(1, 'interface'))
+        int_text.grid(row = 2, column=2, padx=3)
+        
+        ip_text_label = tk.Label(set, text="Adres:")
+        ip_text_label.grid(row = 3, column=2, padx=3)
+        ip_text = tk.Label(set, text=Ctlr.get_pc_data(1, 'address'))
+        ip_text.grid(row = 4, column=2, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Maska:")
+        mask_text_label.grid(row = 5, column=2, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_pc_data(1, 'mask'))
+        mask_text.grid(row = 6, column=2, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Brama domyślna:")
+        mask_text_label.grid(row = 7, column=2, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_pc_data(1, 'gateway'))
+        mask_text.grid(row = 8, column=2, padx=3)
         
         title = tk.Label(set, text="ip:")
         title.grid(row=2, column=1, padx=3)
@@ -188,7 +423,28 @@ class GUI:
     def open_setings_c3(self, *args):
         set = tk.Tk()
         set.title("ustawienia komputera 3")
-        set.geometry("365x300")
+        set.geometry("400x300")
+        
+        int_text_label = tk.Label(set, text="Interfejs:")
+        int_text_label.grid(row = 1, column=2, padx=3)
+        int_text = tk.Label(set, text=Ctlr.get_pc_data(2, 'interface'))
+        int_text.grid(row = 2, column=2, padx=3)
+        
+        ip_text_label = tk.Label(set, text="Adres:")
+        ip_text_label.grid(row = 3, column=2, padx=3)
+        ip_text = tk.Label(set, text=Ctlr.get_pc_data(2, 'address'))
+        ip_text.grid(row = 4, column=2, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Maska:")
+        mask_text_label.grid(row = 5, column=2, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_pc_data(2, 'mask'))
+        mask_text.grid(row = 6, column=2, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Brama domyślna:")
+        mask_text_label.grid(row = 7, column=2, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_pc_data(2, 'gateway'))
+        mask_text.grid(row = 8, column=2, padx=3)
+        
         title = tk.Label(set, text="brama:")
         title.grid(row=0, column=1, padx=3)
         gateway3 = tk.Entry(set)
@@ -211,7 +467,30 @@ class GUI:
     def open_setings_c4(self, *args):
         set = tk.Tk()
         set.title("ustawienia komputera 4")
-        set.geometry("365x300")
+        set.geometry("400x300")
+        
+        
+        int_text_label = tk.Label(set, text="Interfejs:")
+        int_text_label.grid(row = 1, column=2, padx=3)
+        int_text = tk.Label(set, text=Ctlr.get_pc_data(3, 'interface'))
+        int_text.grid(row = 2, column=2, padx=3)
+        
+        ip_text_label = tk.Label(set, text="Adres:")
+        ip_text_label.grid(row = 3, column=2, padx=3)
+        ip_text = tk.Label(set, text=Ctlr.get_pc_data(3, 'address'))
+        ip_text.grid(row = 4, column=2, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Maska:")
+        mask_text_label.grid(row = 5, column=2, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_pc_data(3, 'mask'))
+        mask_text.grid(row = 6, column=2, padx=3)
+        
+        mask_text_label = tk.Label(set, text="Brama domyślna:")
+        mask_text_label.grid(row = 7, column=2, padx=3)
+        mask_text = tk.Label(set, text=Ctlr.get_pc_data(3, 'gateway'))
+        mask_text.grid(row = 8, column=2, padx=3)
+        
+        
         title = tk.Label(set, text="brama:")
         title.grid(row=0, column=1, padx=3)
         gateway4 = tk.Entry(set)
@@ -349,7 +628,7 @@ class GUI:
         load_conf_label.place(x=1094, y=100)
         
     def MiddlePart(self):
-        text = "MLTP symulator"
+        text = "MPLS symulator"
         label = tk.Label(self.root, text=text, font=('Arial', 20))
         label.place(x=460, y=10)
         canvas_rectangle = Canvas(self.root, width=1050, height=450)

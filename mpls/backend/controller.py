@@ -203,14 +203,41 @@ class Controller:
             print('load_default_config : Configuration error')
             print(type(e))
             print(e)
-        
+    
+    
+    @staticmethod
+    def get_router_data(index : int, type : str, opt : int):
+        if len(Controller.ROUTERS) > index:
+            if type == 'interface':
+                return Controller.ROUTERS[index].interfaces[opt].name
+            elif type == 'address':
+                return Controller.ROUTERS[index].interfaces[opt].address
+            elif type == 'mask':
+                return Controller.ROUTERS[index].interfaces[opt].mask
+            
+        return ""
+    
+    @staticmethod
+    def get_pc_data(index : int, type : str):
+        if len(Controller.PCS) > index:
+            if type == 'interface':
+                return Controller.PCS[index].interfaces[0].name
+            elif type == 'address':
+                return Controller.PCS[index].interfaces[0].address
+            elif type == 'mask':
+                return Controller.PCS[index].interfaces[0].mask
+            elif type == 'gateway':
+                return Controller.PCS[index].gateway
+            
+        return "" 
+    
     # --------------------------------------------
     # -- TESTS --
     @staticmethod
     def integration_tests(app):
         tests_names = {
             0 : "Simple communication",
-            1 : "RIP"
+            1 : "LDP Distribution"
         }
         t1 = Controller.test_com()
         t2 = Controller.test_rip()
@@ -316,8 +343,8 @@ class Controller:
             *** AFTER LDP SHOWCASE ***
         '''
         try:
-            print('\nAFTER RIP SHOWCASE:\n')
-            print('ROUTERS - ROUTE TABLES:')
+            print('\nAFTER DISTRIBUTION SHOWCASE:\n')
+            print('ROUTERS - TABLES:')
             for router in Controller.ROUTERS:
                 print(router)
             
@@ -334,7 +361,7 @@ class Controller:
                 PC1 -> PC2
         '''
         try:
-            print('\nSCENARIO 1:')
+            print('\nSCENARIO 1:  [PC1] --> [PC2]')
             addr_from   = Controller.PCS[0].interfaces[0].address
             addr_to     = Controller.PCS[1].interfaces[0].address
             mask_bits_from  = netnet.Net.get_mask_bits(Controller.PCS[0].interfaces[0].mask)
@@ -360,7 +387,7 @@ class Controller:
                 PC1 -> PC4
         '''
         try:
-            print('\nSCENARIO 2:')
+            print('\nSCENARIO 2:  [PC1] --> [PC4]')
             addr_from   = Controller.PCS[0].interfaces[0].address
             addr_to     = Controller.PCS[3].interfaces[0].address
             mask_bits_from  = netnet.Net.get_mask_bits(Controller.PCS[0].interfaces[0].mask)
@@ -386,7 +413,7 @@ class Controller:
                 PC1 -> PC3
         '''
         try:
-            print('\nSCENARIO 3:')
+            print('\nSCENARIO 3:  [PC1] --> [PC3]')
             addr_from   = Controller.PCS[0].interfaces[0].address
             addr_to     = Controller.PCS[2].interfaces[0].address
             mask_bits_from  = netnet.Net.get_mask_bits(Controller.PCS[0].interfaces[0].mask)
@@ -411,14 +438,14 @@ class Controller:
             *** AFTER RIP SHOWCASE ***
         '''
         try:
-            print('\nAFTER RIP SHOWCASE:\n')
-            print('ROUTERS - ROUTE TABLES:')
+            print('\nAFTER TEST SHOWCASE:\n')
+            print('ROUTERS - TABLES:')
             for router in Controller.ROUTERS:
                 print(router)
             
             print(40 * '-')
         except Exception as e:
-            print('test_rip : After RIP Showcase error')
+            print('test_rip : After TEST Showcase error')
             print(type(e))
             print(e)
             return False
