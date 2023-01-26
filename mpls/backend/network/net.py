@@ -139,7 +139,10 @@ class Net:
         
         wildcard_octets = []
         for octet in mask_octets:
-            wildcard_octets.append(255 - int(octet))
+            woctet = 255 - int(octet)
+            if woctet < 0 or woctet > 255:
+                raise ValueError(f'Invalid device mask! [{mask}]!')
+            wildcard_octets.append(woctet)
 
         broadcast = []
         net_addr = []

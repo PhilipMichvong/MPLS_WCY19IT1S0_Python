@@ -11,3 +11,7 @@ class Interface:
     
     def __repr__(self) -> str:
         return f'{self.name} : {self.address}'
+    
+    def __del__(self):
+        self.network.remove_device(self.address)
+        

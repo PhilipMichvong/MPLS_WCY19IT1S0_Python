@@ -7,6 +7,9 @@ import PIL.Image
 import PIL.ImageTk
 import pathlib
 import time
+
+from backend.controller import Controller as Ctlr
+
 jpg_path = './frontend/assets/'
 
 
@@ -15,20 +18,35 @@ class GUI:
 
     def __init__(self) -> None:
         self.root = tk.Tk()
-        self.Console_Text = ""
+        
+        self.console_lines = []
+        self.console_lines_max = 7
+        
         self.WindwowSettings("1280x720", "apka")
         self.ToolBox()
         self.MiddlePart()
-        self.ConsoleOutputPart()
+        self.consoleOutputLabel = self.ConsoleOutputPart()
 
     def run(self):
         self.root.mainloop()
 
+
+    def console_log(self, text : str):
+        self.console_lines.append(text)
+        if len(self.console_lines) > self.console_lines_max:
+            self.console_lines.pop(0)
+        
+        text = ""
+        for log in self.console_lines:
+            text = text + log + '\n'
+            
+        self.consoleOutputLabel.config(text = text)
+        
     def open_setings_r1(self, *args):
         set = tk.Tk()
         set.title(f"ustawienia router 1")
         set.geometry("170x200")
-        consoleOutputLabel.config(text=">konfiguracja dla router 1")
+        self.consoleOutputLabel.config(text=">konfiguracja dla router 1")
         ip = tk.Label(set, text="interfejs:")
         ip.grid(row=0, column=1, padx=3)
         global intr1
@@ -44,29 +62,18 @@ class GUI:
         global maskr1
         maskr1 = tk.Entry(set)
         maskr1.grid(row=5, column=1, padx=3)
+        
         ApplyButton = tk.Button(set, text="Apply sethings", font=(
-            'arial', 10), command=lambda: self.PrintRouterSet(ipr1.get(), maskr1.get(), intr1.get()))
+            'arial', 10), command=lambda: Ctlr.add_interface(self, 0, intr1.get(), ipr1.get(), maskr1.get()))
+        
         ApplyButton.grid(row=6, column=1)
-
-    def PrintRouterSet(self, ip, mask, int):
-        # print(ipr1.get(), maskr1.get())
-        consoleOutputLabel.config(
-            text=f"""
-            =========================================
-            Dodano router o nastepuajcych parametrach:
-                    ip: {ip}
-                    maska : {mask}
-                    interfejs: {int}
-            =========================================
-            """)
-    # ustawienia do adresacji r2
 
     def open_setings_r2(self, *args):
         global intr2, ipr2, maskr2
         set = tk.Tk()
         set.title(f"ustawienia router 2")
         set.geometry("365x300")
-        consoleOutputLabel.config(text=">konfiguracja dla router 1")
+        self.consoleOutputLabel.config(text=">konfiguracja dla router 1")
         ip = tk.Label(set, text="interfejs:")
         ip.grid(row=0, column=1, padx=3)
         intr2 = tk.Entry(set)
@@ -80,17 +87,15 @@ class GUI:
         maskr2 = tk.Entry(set)
         maskr2.grid(row=5, column=1, padx=3)
         ApplyButton = tk.Button(set, text="Apply sethings", font=(
-            'arial', 10), command=lambda: self.PrintRouterSet(ipr2.get(), maskr2.get(), intr2.get()))
+            'arial', 10), command=lambda: Ctlr.add_interface(self, 1, intr2.get(), ipr2.get(), maskr2.get()))
         ApplyButton.grid(row=6, column=1)
-
-    # ustawienia do adresacji r3
 
     def open_setings_r3(self, *args):
         global intr3, ipr3, maskr3
         set = tk.Tk()
         set.title(f"ustawienia router 3")
         set.geometry("365x300")
-        consoleOutputLabel.config(text=">konfiguracja dla router 1")
+        self.consoleOutputLabel.config(text=">konfiguracja dla router 1")
         ip = tk.Label(set, text="interfejs:")
         ip.grid(row=0, column=1, padx=3)
         intr3 = tk.Entry(set)
@@ -104,17 +109,15 @@ class GUI:
         maskr3 = tk.Entry(set)
         maskr3.grid(row=5, column=1, padx=3)
         ApplyButton = tk.Button(set, text="Apply sethings", font=(
-            'arial', 10), command=lambda: self.PrintRouterSet(ipr3.get(), maskr3.get(), intr3.get()))
+            'arial', 10), command=lambda: Ctlr.add_interface(self, 2, intr3.get(), ipr3.get(), maskr3.get()))
         ApplyButton.grid(row=6, column=1)
-
-    # ustawienia do adresacji r4
 
     def open_setings_r4(self, *args):
         global intr4, ipr4, maskr4
         set = tk.Tk()
         set.title(f"ustawienia router 4")
         set.geometry("365x300")
-        consoleOutputLabel.config(text=">konfiguracja dla router 1")
+        self.consoleOutputLabel.config(text=">konfiguracja dla router 1")
         ip = tk.Label(set, text="interfejs:")
         ip.grid(row=0, column=1, padx=3)
         intr4 = tk.Entry(set)
@@ -128,32 +131,113 @@ class GUI:
         maskr4 = tk.Entry(set)
         maskr4.grid(row=5, column=1, padx=3)
         ApplyButton = tk.Button(set, text="Apply sethings", font=(
-            'arial', 10), command=lambda: self.PrintRouterSet(ipr4.get(), maskr4.get(), intr4.get()))
+            'arial', 10), command=lambda: Ctlr.add_interface(self, 3, intr4.get(), ipr4.get(), maskr4.get()))
         ApplyButton.grid(row=6, column=1)
 
-    # funkcja dodająca routery na przycisku
+
+    def open_setings_c1(self, *args):
+        set = tk.Tk()
+        set.title("ustawienia komputera 1")
+        set.geometry("365x300")
+        title = tk.Label(set, text="brama:")
+        title.grid(row=0, column=1, padx=3)
+        gateway1 = tk.Entry(set)
+        gateway1.grid(row=1, column=1, padx=3)
+        
+        title = tk.Label(set, text="ip:")
+        title.grid(row=2, column=1, padx=3)
+        ip_pc1 = tk.Entry(set)
+        ip_pc1.grid(row=3, column=1, padx=3)
+        
+        
+        title = tk.Label(set, text="maska:")
+        title.grid(row=4, column=1, padx=3)
+        mask_pc1 = tk.Entry(set)
+        mask_pc1.grid(row=5, column=1, padx=3)
+        
+        
+        
+        ApplyButton = tk.Button(set, text="Apply sethings", font=(
+            'arial', 10), command=lambda : Ctlr.pc_configure(self, 0, gateway1.get(), ip_pc1.get(), mask_pc1.get()))
+        ApplyButton.grid(row=7, column=1)
+        
+    def open_setings_c2(self, *args):
+        set = tk.Tk()
+        set.title("ustawienia komputera 2")
+        set.geometry("365x300")
+        title = tk.Label(set, text="brama:")
+        title.grid(row=0, column=1, padx=3)
+        gateway2 = tk.Entry(set)
+        gateway2.grid(row=1, column=1, padx=3)
+        
+        
+        title = tk.Label(set, text="ip:")
+        title.grid(row=2, column=1, padx=3)
+        ip_pc2 = tk.Entry(set)
+        ip_pc2.grid(row=3, column=1, padx=3)
+        
+        
+        title = tk.Label(set, text="maska:")
+        title.grid(row=4, column=1, padx=3)
+        mask_pc2 = tk.Entry(set)
+        mask_pc2.grid(row=5, column=1, padx=3)
+        ApplyButton = tk.Button(set, text="Apply sethings", font=(
+            'arial', 10), command=lambda : Ctlr.pc_configure(self, 1, gateway2.get(), ip_pc2.get(), mask_pc2.get()))
+        ApplyButton.grid(row=7, column=1)
+    
+    def open_setings_c3(self, *args):
+        set = tk.Tk()
+        set.title("ustawienia komputera 3")
+        set.geometry("365x300")
+        title = tk.Label(set, text="brama:")
+        title.grid(row=0, column=1, padx=3)
+        gateway3 = tk.Entry(set)
+        gateway3.grid(row=1, column=1, padx=3)
+        
+        title = tk.Label(set, text="ip:")
+        title.grid(row=2, column=1, padx=3)
+        ip_pc3 = tk.Entry(set)
+        ip_pc3.grid(row=3, column=1, padx=3)
+        
+        
+        title = tk.Label(set, text="maska:")
+        title.grid(row=4, column=1, padx=3)
+        mask_pc3 = tk.Entry(set)
+        mask_pc3.grid(row=5, column=1, padx=3)
+        ApplyButton = tk.Button(set, text="Apply sethings", font=(
+            'arial', 10), command=lambda : Ctlr.pc_configure(self, 2, gateway3.get(), ip_pc3.get(), mask_pc3.get()))
+        ApplyButton.grid(row=7, column=1)
+    
+    def open_setings_c4(self, *args):
+        set = tk.Tk()
+        set.title("ustawienia komputera 4")
+        set.geometry("365x300")
+        title = tk.Label(set, text="brama:")
+        title.grid(row=0, column=1, padx=3)
+        gateway4 = tk.Entry(set)
+        gateway4.grid(row=1, column=1, padx=3)
+        
+        title = tk.Label(set, text="ip:")
+        title.grid(row=2, column=1, padx=3)
+        ip_pc4 = tk.Entry(set)
+        ip_pc4.grid(row=3, column=1, padx=3)
+        
+        title = tk.Label(set, text="maska:")
+        title.grid(row=4, column=1, padx=3)
+        mask_pc4 = tk.Entry(set)
+        mask_pc4.grid(row=5, column=1, padx=3)
+        
+        ApplyButton = tk.Button(set, text="Apply sethings", font=(
+            'arial', 10), command=lambda : Ctlr.pc_configure(self, 3, gateway4.get(), ip_pc4.get(), mask_pc4.get()))
+        ApplyButton.grid(row=7, column=1)
+
 
     def MPLS(self):
-
-        #  ===========  TODO: ANIMATION ============
-        global packet_animation, packet_animation2
-        jpg_path = pathlib.Path.absolute(
-            pathlib.Path('.\\frontend\\rot.jpg')
-        )
-        img_p = PIL.Image.open(
-            jpg_path)
-        img2_p = PIL.Image.open(
-            jpg_path)
-
-        packet_animation = PIL.ImageTk.PhotoImage(img_p)
-        packet_animation2 = PIL.ImageTk.PhotoImage(img2_p)
-
-        label_packet = Label(image=packet_animation)
-        label_packet.place(x=350, y=80)
-
-        # label_packet.place(x=350, y=80)
-
-        # label_packet.place(x=350, y=140)
+        Ctlr.integration_tests(self)
+        
+    def Devices_add(self):
+        self.Computer_Add()
+        self.Router_Add()
 
     def Router_Add(self):
         global photo1, photo2, photo3, photo4
@@ -187,8 +271,9 @@ class GUI:
         label4_router = Label(image=photo4)
         label4_router.bind("<Button-1>", self.open_setings_r4)
         label4_router.place(x=760, y=300)
-        consoleOutputLabel.config(
-            text=f">Dodano routery, kliknij na nie aby skonfigurowac")
+        
+        Ctlr.routers_add(self)
+        
 
     def Computer_Add(self):
         global photo1_cmp
@@ -212,18 +297,20 @@ class GUI:
         photo4_cmp = PIL.ImageTk.PhotoImage(img4_comp)
 
         label_comp = Label(image=photo1_cmp)
+        label_comp.bind("<Button-1>", self.open_setings_c1)
         label_comp.place(x=100, y=80)
         label_comp2 = Label(image=photo1_cmp)
+        label_comp2.bind("<Button-1>", self.open_setings_c2)
         label_comp2.place(x=840, y=80)
         label_comp3 = Label(image=photo1_cmp)
+        label_comp3.bind("<Button-1>", self.open_setings_c3)
         label_comp3.place(x=100, y=300)
         label_comp4 = Label(image=photo1_cmp)
+        label_comp4.bind("<Button-1>", self.open_setings_c4)
         label_comp4.place(x=840, y=300)
 
-        consoleOutputLabel.config(
-            text=f">Dodano Komputer - kliknij na nie aby skonfiguroawc")
+        Ctlr.pcs_add(self)
 
-        icon_size = Label()
 
     def WindwowSettings(self, resolution: str, title: str):
         self.root.geometry(resolution)
@@ -234,14 +321,11 @@ class GUI:
         consoleLabel = tk.Label(self.root, text="Konsola symulacji",
                                 font=('Arial', 15), fg="#32CD32")
         toolBoxLabel = tk.Label(self.root, text="ToolBox", font=('Arial', 15))
-        RouterAddLabel = tk.Label(
-            self.root, text="Dodaj Router", font=('Arial', 15))
-        ComputerAddLabel = tk.Label(
-            self.root, text="Dodaj komputer", font=('Arial', 15))
-        RouterAddButton = tk.Button(self.root, text="router", font=(
-            'arial', 10), command=lambda: self.Router_Add())
-        ComputerAddButton = tk.Button(self.root, text="komputer", font=(
-            'arial', 10), command=lambda: self.Computer_Add())
+        DevicesAddLabel = tk.Label(
+            self.root, text="Dodaj urządzenia", font=('Arial', 14))
+        load_conf_label = tk.Label(self.root, text="Wgraj konfiurację", font=('Arial', 14))
+        DeviceAddButton = tk.Button(self.root, text="Dodaj", font=(
+            'arial', 10), command=lambda: self.Devices_add())
         MLTPlabel = tk.Label(
             self.root, text="Rozpocznij symulaje", font=('Arial', 14))
         MLTPbutton = tk.Button(self.root, text="MLTP", font=(
@@ -251,16 +335,19 @@ class GUI:
         Bartlomiej Szykula
         Piotr Targowski
         """, font=('arial', 10))
+        
+        load_conf = tk.Button(self.root, text = "Wgraj", font=('Arial', 10), 
+                              command=lambda : Ctlr.load_default_config(self))
         consoleLabel.place(x=500, y=510)
         toolBoxLabel.place(x=1129, y=30)
-        RouterAddLabel.place(x=1110, y=150)
-        ComputerAddLabel.place(x=1100, y=270)
-        RouterAddButton.place(x=1120, y=200, width=100)
-        ComputerAddButton.place(x=1120, y=320, width=100)
+        DevicesAddLabel.place(x=1100, y=250)
+        DeviceAddButton.place(x=1120, y=300, width=100)
         CreditsLabel.place(x=1090, y=600)
         MLTPlabel.place(x=1080, y=400)
         MLTPbutton.place(x=1120, y=450, width=100)
-
+        load_conf.place(x=1150, y=150)
+        load_conf_label.place(x=1094, y=100)
+        
     def MiddlePart(self):
         text = "MLTP symulator"
         label = tk.Label(self.root, text=text, font=('Arial', 20))
@@ -275,9 +362,8 @@ class GUI:
         console_canvas_rectangle.create_rectangle(
             0, 10, 1020, 150, outline="#FFF", fill="#000")
         console_canvas_rectangle.place(x=30, y=550)
-        Console_Text = ""
-        global consoleOutputLabel
         consoleOutputLabel = tk.Label(
-            self.root, text=Console_Text, font=('Arial', 8), fg="#FFF", bg="#000")
+            self.root, text="", font=('Arial', 8), fg="#FFF", bg="#000")
         consoleOutputLabel.clipboard_clear()
         consoleOutputLabel.place(x=40, y=570)
+        return consoleOutputLabel

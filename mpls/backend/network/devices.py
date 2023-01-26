@@ -99,6 +99,14 @@ class PC(Device):
         else:
             raise ValueError('This PC has no interfaces!')
 
+    def get_interfaces_count(self) -> int:
+        return len(self.interfaces)
+    
+    def remove_interfaces(self) -> None:
+        for interface in self.interfaces:
+            del interface
+        self.interfaces = []
+
     # Packets
     def send_packet(self, packet):
         print(f'{self._name} : Sending packet :\n\t{packet.type}')
