@@ -45,4 +45,4 @@ Zainstalowanie wykorzystywanych bibliotek
 
 Odpalenie GUI do symulacji
 
-    python GUI.py
+    python mpls.py
